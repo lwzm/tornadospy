@@ -9,7 +9,10 @@ do ->
         window.scroll(0, document.body.scrollHeight)
         $input.focus()
 
-    $("body").click((e) -> focus_input() if e.eventPhase == 2)
+    $("html").click((e) ->
+        if e.eventPhase == Event.AT_TARGET
+            focus_input()
+    )
 
     $("#submit").submit((e) ->
         e.preventDefault()

@@ -156,9 +156,10 @@ class ObjectHandler(BaseHandler):
 
 
 HANDLERS = [
-    tornado.web.URLSpec(r"/_spy/object", ObjectHandler, name="object"),
-    tornado.web.URLSpec(r"/_spy/shell", ShellHandler, name="shell"),
-    tornado.web.URLSpec(r"/_spy", MainHandler, name="main"),
+    (r"/_spy/object", ObjectHandler, None, "object"),
+    (r"/_spy/shell", ShellHandler, None, "shell"),
+    (r"/_spy", MainHandler, None, "main"),
+    (r"/", tornado.web.RedirectHandler, {"url": "/_spy"}),
 ]
 
 
