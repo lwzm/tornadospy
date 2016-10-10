@@ -1,2 +1,2 @@
-from .web import run
-run()
+from .web import test
+test()

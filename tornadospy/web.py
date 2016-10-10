@@ -7,6 +7,7 @@ import json
 import os.path
 import shlex
 import sys
+import threading
 import urllib.parse
 
 import tornado.ioloop
@@ -169,19 +170,42 @@ def make_app():
         HANDLERS,
         static_path=complete_path("static"),
         template_path=complete_path("templates"),
-        debug=__debug__,
+        #debug=__debug__,
     )
 
 
 def listen(port=36553):
-    make_app().listen(port, xheaders=True)
+    app = make_app()
+    app.listen(port, xheaders=True)
 
 
-def run():
+def test():
     tornado.options.parse_command_line()
     listen()
     tornado.ioloop.IOLoop.instance().start()
 
 
+def run_in_thread(port=36553):
+    tornado.options.parse_command_line()
+
+    def run():
+        io_loop = tornado.ioloop.IOLoop()
+        io_loop.make_current()
+        assert io_loop is tornado.ioloop.IOLoop.current()
+        listen(port)  # after make_current
+        io_loop.start()
+
+    th = threading.Thread(target=run)
+    th.start()
+
+    return th
+
+
+def stop():
+    io_loop = tornado.ioloop.IOLoop.current()
+    io_loop.close(True)
+    io_loop.stop()
+
+
 if __name__ == "__main__":
-    run()
+    test()
