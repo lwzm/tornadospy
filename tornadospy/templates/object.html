@@ -2,9 +2,6 @@
 {# vim:se filetype=html.tornadotmpl: #}
 
 <link rel="stylesheet" href="{{ static_url("object.css") }}">
-<script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/coffee-script/1.6.3/coffee-script.min.js"></script>
-<script src="{{ static_url("object.coffee") }}" type="text/coffeescript"></script>
 
 <a href={{ reverse_url("object") }}>{{ "<<<" }}</a>
 
@@ -22,3 +19,6 @@
     </li>
     {% end %}
 </ul>
+
+<script src="{{ static_url("zepto.min.js") }}"></script>
+<script src="{{ static_url("object.js") }}"></script>
