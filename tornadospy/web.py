@@ -202,7 +202,8 @@ def run_in_thread(port=36553):
 
 
 def stop():
-    io_loop = tornado.ioloop.IOLoop.current()
+    io_loop = tornado.ioloop.IOLoop.current(False)
+    assert io_loop is not None
     io_loop.close(True)
     io_loop.stop()
 
