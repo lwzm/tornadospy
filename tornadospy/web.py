@@ -125,6 +125,7 @@ class ShellHandler(BaseHandler):
     _sh("import " + ",".join(set(map(
         lambda s: s.split(".")[0], filter(
             lambda s: not s.startswith("_"), sys.modules)))))
+    _sh("del __builtins__['input']")
     _sh("def q(s):                                                 ")
     _sh("    c, *a = shlex.split(s)                                ")
     _sh("    return getattr(sh, c)(*map(sh.glob, a))               ")
