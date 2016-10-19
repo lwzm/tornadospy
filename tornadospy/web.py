@@ -126,6 +126,8 @@ class ShellHandler(BaseHandler):
         lambda s: s.split(".")[0], filter(
             lambda s: not s.startswith("_"), sys.modules)))))
     _sh("del __builtins__['input']")
+    _sh("del __builtins__['exit']")
+    _sh("del __builtins__['quit']")
     _sh("def q(s):                                                 ")
     _sh("    c, *a = shlex.split(s)                                ")
     _sh("    return getattr(sh, c)(*map(sh.glob, a))               ")
@@ -137,9 +139,10 @@ class ShellHandler(BaseHandler):
         self.render("shell.html")
 
     def post(self):
+        self.set_header("Content-Type", "text/plain; charset=UTF-8")
         output = self.sh(self.body_s)
         if output is not None:
-            self.write("\n" + output)
+            self.write(output or "\n")
 
 
 class ObjectHandler(BaseHandler):
@@ -154,6 +157,7 @@ class ObjectHandler(BaseHandler):
         self.render("object.html", s=s, v=v, l=l)
 
     def post(self):
+        self.set_header("Content-Type", "text/plain; charset=UTF-8")
         self.write(repr(eval(self.body_s, None, sys.modules)))
 
 

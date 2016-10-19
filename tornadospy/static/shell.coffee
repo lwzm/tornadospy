@@ -21,18 +21,17 @@ do ->
         if input && input != history[history.length - 1]
             history.push(input)
         historyPos = history.length
-        $prompt.text(" ")
+        $prompt.text("")
         $output.text(txt)
         $.ajax(
             type: "POST",
-            data: $input.val(),
+            data: input,
             success: (data) ->
-                if data
-                    $prompt.text(">>> ")
-                    $output.text(txt + data)
-                else
-                    $prompt.text("... ")
-                    $output.text(txt + "\n")
+                prompt = if data then ">>> " else "... "
+                $prompt.text(prompt)
+                if data != "\n"
+                    data = "\n" + data
+                $output.text(txt + data)
                 focus_input()
         )
         $input.val("")

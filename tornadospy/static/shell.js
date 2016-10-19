@@ -24,19 +24,19 @@
       history.push(input);
     }
     historyPos = history.length;
-    $prompt.text(" ");
+    $prompt.text("");
     $output.text(txt);
     $.ajax({
       type: "POST",
-      data: $input.val(),
+      data: input,
       success: function(data) {
-        if (data) {
-          $prompt.text(">>> ");
-          $output.text(txt + data);
-        } else {
-          $prompt.text("... ");
-          $output.text(txt + "\n");
+        var prompt;
+        prompt = data ? ">>> " : "... ";
+        $prompt.text(prompt);
+        if (data !== "\n") {
+          data = "\n" + data;
         }
+        $output.text(txt + data);
         return focus_input();
       }
     });
