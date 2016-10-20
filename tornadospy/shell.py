@@ -55,7 +55,7 @@ def shell():
     run("del __builtins__['quit']")
     run("def ___(s):                                               ")
     run("    c, *a = shlex.split(s)                                ")
-    run("    return getattr(sh, c)(*map(sh.glob, a))               ")
+    run("    return getattr(sh, c)(*map(sh.glob, a), _timeout=4)   ")
     run("")
 
     return run
