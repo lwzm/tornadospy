@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
-import code
 import functools
-import io
 import json
 import os.path
-import shlex
 import sys
 import threading
 import urllib.parse
@@ -15,47 +12,7 @@ import tornado.options
 import tornado.util
 import tornado.web
 
-try:
-    import sh
-    sh
-except ImportError:
-    pass
-
-
-def shell():
-    r"""
-    >>> sh = shell()
-    >>> sh("1 + 1")
-    '2\n'
-    >>> sh("if True:")
-    >>> sh("    1")
-    >>> sh("    2")
-    >>> sh("")
-    '1\n2\n'
-    """
-
-    sh = code.InteractiveInterpreter()
-    buf = []
-
-    def run(line):
-        buf.append(line.rstrip())
-        source = "\n".join(buf)
-        more = False
-        stdout, stderr = sys.stdout, sys.stderr
-        output = sys.stdout = sys.stderr = io.StringIO()
-
-        try:
-            more = sh.runsource(source)
-        finally:
-            sys.stdout, sys.stderr = stdout, stderr
-
-        if more:
-            return None
-        else:
-            del buf[:]
-            return output.getvalue()
-
-    return run
+from . import shell
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -121,19 +78,7 @@ class MainHandler(BaseHandler):
 
 
 class ShellHandler(BaseHandler):
-    _sh = shell()
-    _sh("import " + ",".join(set(map(
-        lambda s: s.split(".")[0], filter(
-            lambda s: not s.startswith("_"), sys.modules)))))
-    _sh("del __builtins__['input']")
-    _sh("del __builtins__['exit']")
-    _sh("del __builtins__['quit']")
-    _sh("def q(s):                                                 ")
-    _sh("    c, *a = shlex.split(s)                                ")
-    _sh("    return getattr(sh, c)(*map(sh.glob, a))               ")
-    _sh("")
-
-    sh = staticmethod(_sh)
+    sh = staticmethod(shell())
 
     def get(self):
         self.render("shell.html")
