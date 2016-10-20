@@ -28,9 +28,12 @@ def shell():
     buf = []
 
     def run(line):
-        if line.startswith("#"):
+        line = line.rstrip()
+        if line == "#":
+            line = ""
+        elif line.startswith("#"):
             line = """___({!r})""".format(line[1:])
-        buf.append(line.rstrip())
+        buf.append(line)
         source = "\n".join(buf)
         more = False
         stdout, stderr = sys.stdout, sys.stderr
