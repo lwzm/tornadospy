@@ -28,6 +28,8 @@ def shell():
     buf = []
 
     def run(line):
+        if line.startswith("#"):
+            line = """___({!r})""".format(line[1:])
         buf.append(line.rstrip())
         source = "\n".join(buf)
         more = False
@@ -51,7 +53,7 @@ def shell():
     run("del __builtins__['input']")
     run("del __builtins__['exit']")
     run("del __builtins__['quit']")
-    run("def q(s):                                                 ")
+    run("def ___(s):                                               ")
     run("    c, *a = shlex.split(s)                                ")
     run("    return getattr(sh, c)(*map(sh.glob, a))               ")
     run("")
