@@ -29,9 +29,9 @@ def shell():
 
     def run(line):
         line = line.rstrip()
-        if line == "#":
+        if line == "#":  # single # is special
             line = ""
-        elif line.startswith("#"):
+        elif len(line) > 1 and line[0] == "#" and line[1].isalnum():
             line = """___({!r})""".format(line[1:])
         buf.append(line)
         source = "\n".join(buf)
