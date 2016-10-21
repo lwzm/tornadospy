@@ -59,7 +59,7 @@ def shell():
     run("del sys.exit")
     run("def ___(s):                                               ")
     run("    c, *a = shlex.split(s)                                ")
-    run("    return getattr(sh, c)(*map(sh.glob, a), _timeout=4)   ")
+    run("    return getattr(sh, c)(*map(sh.glob, a), _timeout=3.3) ")
     run("")
 
     return run
