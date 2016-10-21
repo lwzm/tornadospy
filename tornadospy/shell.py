@@ -50,6 +50,7 @@ def shell():
             del buf[:]
             return output.getvalue()
 
+    run("import __main__")
     run("import " + ",".join(set(map(
         lambda s: s.split(".")[0], filter(
             lambda s: not s.startswith("_"), sys.modules)))))
