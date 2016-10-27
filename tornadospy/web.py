@@ -116,6 +116,7 @@ HANDLERS = [
     (r"/_spy/shell", ShellHandler, None, "shell"),
     (r"/_spy", MainHandler, None, "main"),
     (r"/", tornado.web.RedirectHandler, {"url": "/_spy"}),
+    (r"/(.+)", tornado.web.StaticFileHandler, {"path": "."}),
 ]
 
 
