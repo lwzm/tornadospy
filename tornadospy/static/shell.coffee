@@ -5,7 +5,7 @@ do ->
     history = []
     historyPos = 0
 
-    focus_input = ->
+    focus_input = () ->
         window.scroll(0, document.body.scrollHeight)
         $input.focus()
 
@@ -24,8 +24,9 @@ do ->
         $prompt.text("")
         $output.text(txt)
         $.ajax(
-            type: "POST",
-            data: input,
+            type: "POST"
+            contentType: false
+            data: input
             success: (data) ->
                 prompt = if data then ">>> " else "... "
                 $prompt.text(prompt)

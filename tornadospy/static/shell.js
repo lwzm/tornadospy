@@ -28,6 +28,7 @@
     $output.text(txt);
     $.ajax({
       type: "POST",
+      contentType: false,
       data: input,
       success: function(data) {
         var prompt;
