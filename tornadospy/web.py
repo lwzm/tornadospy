@@ -35,9 +35,9 @@ class BaseHandler(tornado.web.RequestHandler):
                         "GET, POST, PUT, DELETE, PATCH, OPTIONS")
         self.set_header("Access-Control-Max-Age", "3600")
 
-    def write_json(self, obj):
+    def write_json(self, obj, default=str):
         self.set_header("Content-Type", "application/json; charset=UTF-8")
-        self.write(json.dumps(obj, default=str, ensure_ascii=False,
+        self.write(json.dumps(obj, default=default, ensure_ascii=False,
                               separators=(",", ":")))
 
     def write_octet(self, bs, filename):
@@ -102,8 +102,13 @@ class ObjectHandler(BaseHandler):
         self.render("object.html", s=s, v=v, l=l)
 
     def post(self):
-        self.set_header("Content-Type", "text/plain; charset=UTF-8")
-        self.write(repr(eval(self.body_s, None, sys.modules)))
+        type = self.get_query_argument("type", "repr")
+        response = eval(self.body_s, None, sys.modules)
+        if type == "repr":
+            self.set_header("Content-Type", "text/plain; charset=UTF-8")
+            self.write(repr(response))
+        elif type == "json":
+            self.write_json(response)
 
 
 HANDLERS = [
