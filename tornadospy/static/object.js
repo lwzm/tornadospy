@@ -4,6 +4,7 @@
     var $a;
     $a = $(this);
     return $.ajax({
+      url: location.pathname + "?type=repr",
       type: "POST",
       data: $a.attr("href").slice(1),
       dataType: "text",
