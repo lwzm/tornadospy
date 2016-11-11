@@ -35,6 +35,9 @@ class BaseHandler(tornado.web.RequestHandler):
                         "GET, POST, PUT, DELETE, PATCH, OPTIONS")
         self.set_header("Access-Control-Max-Age", "3600")
 
+    def compute_etag(self):
+        return None
+
     def write_json(self, obj, default=str):
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json.dumps(obj, default=default, ensure_ascii=False,

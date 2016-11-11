@@ -24,7 +24,6 @@ $("#submit").submit((e) ->
     $output.text(txt)
     $.ajax(
         type: "POST"
-        contentType: false
         data: input
         success: (data) ->
             prompt = if data then ">>> " else "... "
