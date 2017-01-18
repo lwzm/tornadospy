@@ -10,4 +10,4 @@ Type "help", "copyright", "credits" or "license" for more information.
 """
 
 from . import shell
-from .web import listen, run_in_thread, stop
+from .web import make_app, listen, run_in_thread, stop

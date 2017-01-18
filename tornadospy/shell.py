@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from __future__ import division, print_function, unicode_literals
+
 import code
 import io
 import shlex
@@ -12,9 +14,9 @@ except ImportError:
     pass
 
 
-def shell():
+def instance():
     r"""
-    >>> sh = shell()
+    >>> sh = instance()
     >>> sh("1 + 1")
     '2\n'
     >>> sh("if True:")
@@ -27,6 +29,8 @@ def shell():
     sh = code.InteractiveInterpreter()
     buf = []
 
+    IO = io.StringIO if sys.version_info.major >= 3 else io.BytesIO
+
     def run(line):
         line = line.rstrip()
         if line == "#":  # single # is special
@@ -37,7 +41,7 @@ def shell():
         source = "\n".join(buf)
         more = False
         stdout, stderr = sys.stdout, sys.stderr
-        output = sys.stdout = sys.stderr = io.StringIO()
+        output = sys.stdout = sys.stderr = IO()
 
         try:
             more = sh.runsource(source)
@@ -58,7 +62,8 @@ def shell():
     run("del __builtins__['exit']")
     run("del __builtins__['quit']")
     run("def ___(s):                                                         ")
-    run("    c, *a = shlex.split(s)                                          ")
+    run("    l = shlex.split(s)                                              ")
+    run("    c, a = l[0], l[1:]                                              ")
     run("    try:                                                            ")
     run("        cmd = getattr(sh, c)                                        ")
     run("        args = map(sh.glob, a)                                      ")
@@ -75,5 +80,5 @@ def shell():
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-else:
-    sys.modules[__name__] = shell
+    sh = instance()
+    print(sh("print(dir())"))

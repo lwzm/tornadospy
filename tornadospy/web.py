@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 
+from __future__ import division, print_function, unicode_literals
+
 import functools
 import json
 import os.path
 import sys
 import threading
-import urllib.parse
+
+try:
+    import urllib.parse as urllib_parse
+except ImportError:
+    import urllib as urllib_parse
 
 import tornado.ioloop
 import tornado.options
@@ -52,7 +58,7 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def query_s(self):
         if not hasattr(self, "_query_s"):
-            self._query_s = urllib.parse.unquote(self.request.query)
+            self._query_s = urllib_parse.unquote(self.request.query)
         return self._query_s
 
     @property
@@ -65,7 +71,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def kwargs(self):
         if not hasattr(self, "_kwargs"):
             self._kwargs = tornado.util.ObjectDict(
-                urllib.parse.parse_qsl((self.request.query)))
+                urllib_parse.parse_qsl((self.request.query)))
         return self._kwargs
 
     @property
@@ -81,7 +87,7 @@ class MainHandler(BaseHandler):
 
 
 class ShellHandler(BaseHandler):
-    sh = staticmethod(shell())
+    sh = staticmethod(shell.instance())
 
     def get(self):
         self.render("shell.html")
