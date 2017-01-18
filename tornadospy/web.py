@@ -107,7 +107,7 @@ class ObjectHandler(BaseHandler):
             l = dir(v)
         else:
             v = None
-            l = sorted(sys.modules)
+            l = sorted(i for i in sys.modules if "." not in i)
         self.render("object.html", s=s, v=v, l=l)
 
     def post(self):
