@@ -17,6 +17,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.util
 import tornado.web
+import tornado.wsgi
 
 from . import shell
 
@@ -139,6 +140,10 @@ def make_app():
     )
 
 
+def make_wsgi_app():
+    return tornado.wsgi.WSGIAdapter(make_app())
+
+
 def listen(port=36553):
     app = make_app()
     app.listen(port, xheaders=True)
@@ -148,6 +153,13 @@ def test():
     tornado.options.parse_command_line()
     listen()
     tornado.ioloop.IOLoop.instance().start()
+
+
+def test_wsgi():
+    from wsgiref import simple_server
+    wsgi_app = make_wsgi_app()
+    server = simple_server.make_server("", 36553, wsgi_app)
+    server.serve_forever()
 
 
 def run_in_thread(port=36553):
