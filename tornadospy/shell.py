@@ -14,7 +14,7 @@ except ImportError:
     pass
 
 
-def instance():
+def instance(safe=False):
     r"""
     >>> sh = instance()
     >>> sh("1 + 1")
@@ -58,9 +58,10 @@ def instance():
     run("import " + ",".join(set(map(
         lambda s: s.split(".")[0], filter(
             lambda s: not s.startswith("_"), sys.modules)))))
-    run("del __builtins__['input']")
-    run("del __builtins__['exit']")
-    run("del __builtins__['quit']")
+    if safe:
+        run("del __builtins__['input']")
+        run("del __builtins__['exit']")
+        run("del __builtins__['quit']")
     run("def ___(s):                                                         ")
     run("    l = shlex.split(s)                                              ")
     run("    c, a = l[0], l[1:]                                              ")

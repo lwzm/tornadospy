@@ -21,6 +21,8 @@ import tornado.wsgi
 
 from . import shell
 
+THREAD_IOLOOP = None
+
 
 class BaseHandler(tornado.web.RequestHandler):
     def set_default_headers(self):
@@ -170,6 +172,8 @@ def run_in_thread(port=36553):
         io_loop.make_current()
         assert io_loop is tornado.ioloop.IOLoop.current()
         listen(port)  # after make_current
+        global THREAD_IOLOOP
+        THREAD_IOLOOP = io_loop
         io_loop.start()
 
     th = threading.Thread(target=run)
@@ -180,9 +184,34 @@ def run_in_thread(port=36553):
 
 def stop():
     io_loop = tornado.ioloop.IOLoop.current(False)
-    assert io_loop is not None
-    io_loop.close(True)
-    io_loop.stop()
+    def cb():
+        io_loop.stop()
+        io_loop.close(True)
+    if io_loop:
+        assert io_loop is THREAD_IOLOOP
+        io_loop.call_later(0, cb)
+    else:
+        io_loop = THREAD_IOLOOP
+        io_loop.add_callback(cb)
+
+
+class _Env:
+    def __enter__(self):
+        run_in_thread()
+    def __exit__(self, type, value, traceback):
+        stop()
+
+env = _Env()
+
+"""
+you can use `env` like this:
+
+    with tornadospy.env:
+        # blah...
+        input()  # blocking...
+        # blah...
+
+"""
 
 
 if __name__ == "__main__":
