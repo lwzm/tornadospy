@@ -5,13 +5,15 @@
 
 <a href={{ reverse_url("object") }}>{{ "<<<" }}</a>
 
+{% if s %}
 <p><code>{{ s }}</code></p>
-<p><code>{{ v }}</code></p>
+<p><code>{{ repr(v) }}</code></p>
+{% end %}
 
 <ul>
     {% for k in l %}
     <li>
-    {% if v is not None %}
+    {% if s %}
     <a href="?{{ "{}.{}".format(s, k) }}">{{ k }}</a>
     {% else %}
     <a href="?{{ k }}">{{ k }}</a>
