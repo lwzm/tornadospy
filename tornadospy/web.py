@@ -154,7 +154,7 @@ def listen(port=36553):
 def test():
     tornado.options.parse_command_line()
     listen()
-    tornado.ioloop.IOLoop.instance().start()
+    tornado.ioloop.IOLoop.current().start()
 
 
 def test_wsgi():
