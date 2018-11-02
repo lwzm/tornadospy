@@ -6,7 +6,6 @@ import functools
 import json
 import os.path
 import sys
-import threading
 
 try:
     import urllib.parse as urllib_parse
@@ -17,7 +16,6 @@ import tornado.ioloop
 import tornado.options
 import tornado.util
 import tornado.web
-import tornado.wsgi
 
 from . import shell
 
@@ -143,7 +141,8 @@ def make_app():
 
 
 def make_wsgi_app():
-    return tornado.wsgi.WSGIAdapter(make_app())
+    from tornado.wsgi import WSGIAdapter
+    return WSGIAdapter(make_app())
 
 
 def listen(port=36553):
@@ -176,6 +175,7 @@ def run_in_thread(port=36553):
         THREAD_IOLOOP = io_loop
         io_loop.start()
 
+    import threading
     th = threading.Thread(target=run)
     th.start()
 
