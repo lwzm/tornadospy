@@ -72,7 +72,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def kwargs(self):
         if not hasattr(self, "_kwargs"):
             self._kwargs = tornado.util.ObjectDict(
-                urllib_parse.parse_qsl((self.request.query)))
+                urllib_parse.parse_qsl(self.request.query))
         return self._kwargs
 
     @property
